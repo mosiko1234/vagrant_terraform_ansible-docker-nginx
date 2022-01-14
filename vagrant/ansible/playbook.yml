@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Pull an image
+      community.docker.docker_image:
+        name: nginx:latest
+        source: pull
+        # Select platform for pulling. If not specified, will pull whatever docker prefers.
+        pull:
+          platform: amd64
+    - name: Start container
+      community.docker.docker_container:
+        name: nginx-container
+        image: nginx:latest
+        state: started
+        ports:
+          # Publish container port 9000 as host port 8080
+          - "8080:80"
